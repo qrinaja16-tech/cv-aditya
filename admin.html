@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — Aditya Portfolio</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #040b16;
+            --bg-surface: #0a1526;
+            --bg-card: rgba(13, 25, 45, 0.86);
+            --primary: #00d2ff;
+            --primary-dim: rgba(0, 210, 255, 0.12);
+            --secondary: #3b82f6;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(148, 163, 184, 0.16);
+            --radius: 14px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at 15% 15%, rgba(0,210,255,0.08), transparent 45%), var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+        h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Login Screen */
+        .login-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.55);
+        }
+        .login-card h1 { font-size: 1.7rem; margin-bottom: 6px; }
+        .login-card h1 span { color: var(--primary); }
+        .login-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
+
+        .field { margin-bottom: 16px; }
+        .field label { display: block; font-size: 0.84rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+        .field input, .field textarea, .field select {
+            width: 100%;
+            background: rgba(4, 11, 22, 0.75);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 14px;
+            color: var(--text-main);
+            font-size: 0.94rem;
+            font-family: inherit;
+        }
+        .field textarea { min-height: 90px; resize: vertical; }
+        .field input:focus, .field textarea:focus, .field select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #040b16;
+            border-color: transparent;
+            font-weight: 700;
+        }
+        .btn-primary:hover:not(:disabled) { color: #040b16; filter: brightness(1.08); }
+        .btn-danger { background: rgba(239,68,68,0.14); border-color: rgba(239,68,68,0.4); color: #fca5a5; }
+        .btn-danger:hover:not(:disabled) { background: var(--danger); color: #fff; }
+        .btn-success { background: rgba(16,185,129,0.14); border-color: rgba(16,185,129,0.4); color: #6ee7b7; }
+        .btn-sm { padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; }
+
+        .alert {
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .alert.active { display: block; }
+        .alert-error { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.45); color: #fca5a5; }
+        .alert-success { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.45); color: #6ee7b7; }
+
+        /* Dashboard Layout */
+        .app-shell { display: none; }
+        .app-shell.active { display: block; }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(4, 11, 22, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 5%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand { display: flex; align-items: center; gap: 12px; }
+        .brand h2 { font-size: 1.2rem; }
+        .brand h2 span { color: var(--primary); }
+        .db-pill {
+            font-size: 0.76rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--primary-dim);
+            border: 1px solid rgba(0,210,255,0.3);
+            color: var(--primary);
+        }
+        .topbar-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+        .main-container { max-width: 1280px; margin: 0 auto; padding: 28px 5% 80px; }
+
+        .tabs-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 14px;
+        }
+        .tab-btn {
+            padding: 9px 16px;
+            border-radius: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #040b16;
+            border-color: transparent;
+        }
+
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        .panel-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 16px;
+        }
+        .item-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .item-card h4 { font-size: 1.05rem; margin-bottom: 4px; }
+        .item-meta { font-size: 0.8rem; color: var(--primary); margin-bottom: 6px; word-break: break-all; }
+        .item-desc { font-size: 0.88rem; color: var(--text-muted); }
+        .item-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.08);
+            color: var(--text-muted);
+        }
+        .badge.pinned { background: var(--primary-dim); color: var(--primary); }
+        .badge.hidden-item { background: rgba(239,68,68,0.16); color: #fca5a5; }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(2,6,14,0.86);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 999;
+        }
+        .modal-backdrop.active { display: flex; }
+        .modal-box {
+            width: 100%;
+            max-width: 540px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 26px;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .security-note {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 640px) {
+            .grid-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div class="login-wrap" id="loginView">
+        <div class="login-card">
+            <h1>Admin <span>Panel.</span></h1>
+            <p class="login-sub">Masuk menggunakan akun administrator terdaftar untuk mengelola seluruh data &amp; database.</p>
+
+            <div class="alert alert-error" id="loginError"></div>
+
+            <form id="loginForm" autocomplete="on">
+                <div class="field">
+                    <label for="loginEmail">Email Admin</label>
+                    <input type="email" id="loginEmail" placeholder="achmadfurqon33@gmail.com" required>
+                </div>
+                <div class="field">
+                    <label for="loginPassword">Password</label>
+                    <div style="position:relative;">
+                        <input type="password" id="loginPassword" placeholder="••••••••••••" required style="padding-right:42px;">
+                        <button type="button" id="togglePw" aria-label="Lihat password" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.95rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn" style="width: 100%; padding: 12px;">
+                    <i class="fas fa-shield-halved"></i> Masuk Admin
+                </button>
+            </form>
+
+            <div style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center;">
+                <a href="index.html" class="btn btn-sm"><i class="fas fa-arrow-left"></i> Portofolio</a>
+                <button type="button" class="btn btn-sm" id="openDbFromLogin"><i class="fas fa-database"></i> Ganti DB</button>
+            </div>
+
+            <div class="security-note">
+                <i class="fas fa-lock"></i> Autentikasi diverifikasi via Firebase Auth (tanpa menyimpan password di kode halaman) dengan pembatasan percobaan login &amp; sanitasi input anti-XSS/injection.
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div class="app-shell" id="adminView">
+        <header class="topbar">
+            <div class="brand">
+                <h2>Aditya <span>Admin</span></h2>
+                <span class="db-pill mono" id="activeDbLabel">DB: Default</span>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn btn-sm btn-success" id="seedDefaultBtn"><i class="fas fa-cloud-upload-alt"></i> Sync Data Awal ke DB</button>
+                <button class="btn btn-sm" id="exportJsonBtn"><i class="fas fa-download"></i> Backup JSON</button>
+                <button class="btn btn-sm" id="openDbBtn"><i class="fas fa-database"></i> Ganti Database</button>
+                <a href="index.html" class="btn btn-sm" target="_blank"><i class="fas fa-external-link-alt"></i> Lihat Web</a>
+                <button class="btn btn-sm btn-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+            </div>
+        </header>
+
+        <main class="main-container">
+            <div class="alert alert-success" id="globalSuccess"></div>
+            <div class="alert alert-error" id="globalError"></div>
+
+            <div class="tabs-nav" id="adminTabs">
+                <button class="tab-btn active" data-panel="ratingsPanel"><i class="fas fa-star"></i> Ulasan</button>
+                <button class="tab-btn" data-panel="venturesPanel"><i class="fas fa-globe"></i> Platform Live</button>
+                <button class="tab-btn" data-panel="experiencePanel"><i class="fas fa-briefcase"></i> Karier &amp; Mengajar</button>
+                <button class="tab-btn" data-panel="skillsPanel"><i class="fas fa-code"></i> Keahlian</button>
+                <button class="tab-btn" data-panel="projectsPanel"><i class="fas fa-folder-open"></i> Proyek Digital</button>
+                <button class="tab-btn" data-panel="profilePanel"><i class="fas fa-user-tie"></i> Profil &amp; Prestasi</button>
+            </div>
+
+            <!-- 1. ULASAN -->
+            <section class="panel active" id="ratingsPanel">
+                <div class="panel-head">
+                    <h3>Kelola Ulasan Publik</h3>
+                    <button class="btn btn-primary btn-sm" id="addRatingBtn"><i class="fas fa-plus"></i> Tambah Ulasan</button>
+                </div>
+                <div class="grid-cards" id="ratingsList"></div>
+            </section>
+
+            <!-- 2. PLATFORM LIVE -->
+            <section class="panel" id="venturesPanel">
+                <div class="panel-head">
+                    <h3>Kelola Platform Live &amp; Bisnis</h3>
+                    <button class="btn btn-primary btn-sm" id="addVentureBtn"><i class="fas fa-plus"></i> Tambah Platform</button>
+                </div>
+                <div class="grid-cards" id="venturesList"></div>
+            </section>
+
+            <!-- 3. KARIER & MENGAJAR -->
+            <section class="panel" id="experiencePanel">
+                <div class="panel-head">
+                    <h3>Kelola Karier, Mengajar, Bisnis &amp; Organisasi</h3>
+                    <button class="btn btn-primary btn-sm" id="addExpBtn"><i class="fas fa-plus"></i> Tambah Item</button>
+                </div>
+                <div class="grid-cards" id="experienceList"></div>
+            </section>
+
+            <!-- 4. KEAHLIAN -->
+            <section class="panel" id="skillsPanel">
+                <div class="panel-head">
+                    <h3>Kelola Keahlian Utama</h3>
+                    <button class="btn btn-primary btn-sm" id="addSkillBtn"><i class="fas fa-plus"></i> Tambah Keahlian</button>
+                </div>
+                <div class="grid-cards" id="skillsList"></div>
+            </section>
+
+            <!-- 5. PROYEK DIGITAL -->
+            <section class="panel" id="projectsPanel">
+                <div class="panel-head">
+                    <h3>Kelola Proyek Digital</h3>
+                    <button class="btn btn-primary btn-sm" id="addProjectBtn"><i class="fas fa-plus"></i> Tambah Proyek</button>
+                </div>
+                <div class="grid-cards" id="projectsList"></div>
+            </section>
+
+            <!-- 6. PROFIL & PRESTASI -->
+            <section class="panel" id="profilePanel">
+                <div class="panel-head">
+                    <h3>Profil Hero &amp; Prestasi Terpilih</h3>
+                </div>
+                <form id="profileForm" class="item-card" style="max-width: 720px;">
+                    <div class="field">
+                        <label for="profBadge">Badge Hero</label>
+                        <input type="text" id="profBadge" maxlength="80" required>
+                    </div>
+                    <div class="field">
+                        <label for="profDesc">Deskripsi Singkat Hero</label>
+                        <textarea id="profDesc" maxlength="360" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="profIg">Link Instagram</label>
+                        <input type="url" id="profIg" required>
+                    </div>
+                    <div class="field">
+                        <label for="profWa">Link WhatsApp</label>
+                        <input type="url" id="profWa" required>
+                    </div>
+                    <div class="field">
+                        <label for="achTitle">Judul Prestasi Terpilih</label>
+                        <input type="text" id="achTitle" maxlength="100" required>
+                    </div>
+                    <div class="field">
+                        <label for="achDesc">Deskripsi Prestasi</label>
+                        <textarea id="achDesc" maxlength="400" required></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="achUrl">Link Berita / Data Asli</label>
+                        <input type="url" id="achUrl" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Profil &amp; Prestasi</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- CRUD MODAL -->
+    <div class="modal-backdrop" id="crudModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="crudModalTitle">Edit Data</h3>
+                <button type="button" class="modal-close" id="closeCrudModal">&times;</button>
+            </div>
+            <form id="crudForm">
+                <div id="crudFields"></div>
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:16px;">
+                    <button type="button" class="btn" id="cancelCrudBtn">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DATABASE CONFIG MODAL -->
+    <div class="modal-backdrop" id="dbModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Konfigurasi Database Firebase</h3>
+                <button type="button" class="modal-close" id="closeDbModal">&times;</button>
+            </div>
+            <p style="color:var(--text-muted); font-size:0.86rem; margin-bottom:16px;">
+                Ganti konfigurasi Firebase Realtime Database kapan saja. Pengaturan disimpan aman di browser ini dan langsung dipakai oleh halaman Admin, Portofolio, dan Rating.
+            </p>
+            <form id="dbForm">
+                <div class="field"><label>API Key</label><input type="text" id="dbApiKey" required></div>
+                <div class="field"><label>Auth Domain</label><input type="text" id="dbAuthDomain" required></div>
+                <div class="field"><label>Database URL</label><input type="url" id="dbUrl" required></div>
+                <div class="field"><label>Project ID</label><input type="text" id="dbProjectId" required></div>
+                <div class="field"><label>Storage Bucket</label><input type="text" id="dbStorageBucket"></div>
+                <div class="field"><label>Messaging Sender ID</label><input type="text" id="dbSenderId"></div>
+                <div class="field"><label>App ID</label><input type="text" id="dbAppId" required></div>
+                <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; margin-top:16px;">
+                    <button type="button" class="btn btn-danger btn-sm" id="resetDbBtn">Reset ke Default</button>
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" class="btn" id="cancelDbBtn">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan &amp; Muat Ulang</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, onValue, push, set, update, remove, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const ADMIN_EMAIL = "achmadfurqon33@gmail.com";
+        const DB_STORAGE_KEY = "aditya_custom_firebase_config";
+        const DEFAULT_CONFIG = {
+            apiKey: "AIzaSyBcQuP2GFUgljflnmhRZEKtB4R8Zr9ye6Y",
+            authDomain: "cwu-ii-3ae88.firebaseapp.com",
+            databaseURL: "https://cwu-ii-3ae88-default-rtdb.firebaseio.com",
+            projectId: "cwu-ii-3ae88",
+            storageBucket: "cwu-ii-3ae88.firebasestorage.app",
+            messagingSenderId: "259906078778",
+            appId: "1:259906078778:web:3e289947bf2e6b27ce0d03"
+        };
+
+        function loadConfig() {
+            try {
+                const raw = localStorage.getItem(DB_STORAGE_KEY);
+                if (!raw) return { cfg: DEFAULT_CONFIG, isCustom: false };
+                const parsed = JSON.parse(raw);
+                if (parsed && parsed.databaseURL && parsed.apiKey) return { cfg: parsed, isCustom: true };
+            } catch (_) {}
+            return { cfg: DEFAULT_CONFIG, isCustom: false };
+        }
+
+        const { cfg: firebaseConfig, isCustom } = loadConfig();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        document.getElementById('activeDbLabel').textContent = `DB: ${firebaseConfig.projectId}${isCustom ? ' (Custom)' : ''}`;
+
+        // Security Helpers (Anti-XSS, Anti-Script/PHP/SQL-style payloads, Safe URLs)
+        function escapeHTML(str) {
+            return String(str ?? '').replace(/[&<>"']/g, (m) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[m]));
+        }
+
+        function sanitizeText(str, maxLen = 400) {
+            const cleaned = String(str ?? '')
+                .replace(/<\s*\?php[\s\S]*?\?>/gi, '')
+                .replace(/[<>]/g, '')
+                .replace(/javascript\s*:/gi, '')
+                .trim();
+            return cleaned.slice(0, maxLen);
+        }
+
+        function isSafeUrl(url) {
+            if (!url) return false;
+            try {
+                const parsed = new URL(url, window.location.origin);
+                return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+            } catch {
+                return false;
+            }
+        }
+
+        // Brute-Force Login Rate Limiter
+        const LOCK_KEY = "aditya_admin_lock";
+        function getLockState() {
+            try { return JSON.parse(localStorage.getItem(LOCK_KEY) || '{"fails":0,"until":0}'); }
+            catch { return { fails: 0, until: 0 }; }
+        }
+        function setLockState(state) {
+            localStorage.setItem(LOCK_KEY, JSON.stringify(state));
+        }
+
+        const loginView = document.getElementById('loginView');
+        const adminView = document.getElementById('adminView');
+        const loginError = document.getElementById('loginError');
+        const globalSuccess = document.getElementById('globalSuccess');
+        const globalError = document.getElementById('globalError');
+
+        function notify(msg, isErr = false) {
+            const el = isErr ? globalError : globalSuccess;
+            const other = isErr ? globalSuccess : globalError;
+            other.classList.remove('active');
+            el.textContent = msg;
+            el.classList.add('active');
+            setTimeout(() => el.classList.remove('active'), 4000);
+        }
+
+        // Auth State Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                loginView.style.display = 'none';
+                adminView.classList.add('active');
+                startListeners();
+            } else {
+                if (user) signOut(auth);
+                adminView.classList.remove('active');
+                loginView.style.display = 'flex';
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            loginError.classList.remove('active');
+
+            const lock = getLockState();
+            if (Date.now() < lock.until) {
+                const sisa = Math.ceil((lock.until - Date.now()) / 1000);
+                loginError.textContent = `Terlalu banyak percobaan gagal. Coba lagi dalam ${sisa} detik.`;
+                loginError.classList.add('active');
+                return;
+            }
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const pw = document.getElementById('loginPassword').value;
+
+            if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+                loginError.textContent = 'Email tidak terdaftar sebagai administrator.';
+                loginError.classList.add('active');
+                return;
+            }
+
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memverifikasi...';
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pw);
+                setLockState({ fails: 0, until: 0 });
+            } catch (err) {
+                const fails = (lock.fails || 0) + 1;
+                const until = fails >= 5 ? Date.now() + 60000 : 0;
+                setLockState({ fails: fails >= 5 ? 0 : fails, until });
+                let msg = 'Email/password salah, atau akun belum didaftarkan di Firebase Console → Authentication → Users.';
+                if (err.code === 'auth/operation-not-allowed') {
+                    msg = 'Email/Password Auth belum diaktifkan di Firebase Console.';
+                } else if (err.code === 'auth/too-many-requests') {
+                    msg = 'Terlalu banyak percobaan. Tunggu beberapa saat.';
+                }
+                loginError.textContent = msg;
+                loginError.classList.add('active');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-shield-halved"></i> Masuk Admin';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+        document.getElementById('togglePw').addEventListener('click', () => {
+            const pwInput = document.getElementById('loginPassword');
+            const icon = document.querySelector('#togglePw i');
+            const isHidden = pwInput.type === 'password';
+            pwInput.type = isHidden ? 'text' : 'password';
+            icon.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+        });
+
+        // Tabs
+        document.querySelectorAll('#adminTabs .tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#adminTabs .tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.panel).classList.add('active');
+            });
+        });
+
+        // Database Switcher Modal
+        const dbModal = document.getElementById('dbModal');
+        function openDbModal() {
+            document.getElementById('dbApiKey').value = firebaseConfig.apiKey || '';
+            document.getElementById('dbAuthDomain').value = firebaseConfig.authDomain || '';
+            document.getElementById('dbUrl').value = firebaseConfig.databaseURL || '';
+            document.getElementById('dbProjectId').value = firebaseConfig.projectId || '';
+            document.getElementById('dbStorageBucket').value = firebaseConfig.storageBucket || '';
+            document.getElementById('dbSenderId').value = firebaseConfig.messagingSenderId || '';
+            document.getElementById('dbAppId').value = firebaseConfig.appId || '';
+            dbModal.classList.add('active');
+        }
+        document.getElementById('openDbBtn').addEventListener('click', openDbModal);
+        document.getElementById('openDbFromLogin').addEventListener('click', openDbModal);
+        document.getElementById('closeDbModal').addEventListener('click', () => dbModal.classList.remove('active'));
+        document.getElementById('cancelDbBtn').addEventListener('click', () => dbModal.classList.remove('active'));
+
+        document.getElementById('dbForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newCfg = {
+                apiKey: document.getElementById('dbApiKey').value.trim(),
+                authDomain: document.getElementById('dbAuthDomain').value.trim(),
+                databaseURL: document.getElementById('dbUrl').value.trim(),
+                projectId: document.getElementById('dbProjectId').value.trim(),
+                storageBucket: document.getElementById('dbStorageBucket').value.trim(),
+                messagingSenderId: document.getElementById('dbSenderId').value.trim(),
+                appId: document.getElementById('dbAppId').value.trim()
+            };
+            if (!isSafeUrl(newCfg.databaseURL)) {
+                alert('Database URL tidak valid.');
+                return;
+            }
+            localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(newCfg));
+            window.location.reload();
+        });
+
+        document.getElementById('resetDbBtn').addEventListener('click', () => {
+            localStorage.removeItem(DB_STORAGE_KEY);
+            window.location.reload();
+        });
+
+        // CRUD Modal Helpers
+        const crudModal = document.getElementById('crudModal');
+        const crudFields = document.getElementById('crudFields');
+        const crudModalTitle = document.getElementById('crudModalTitle');
+        let currentSubmitHandler = null;
+
+        function openCrudModal(title, fieldsHTML, onSubmit) {
+            crudModalTitle.textContent = title;
+            crudFields.innerHTML = fieldsHTML;
+            currentSubmitHandler = onSubmit;
+            crudModal.classList.add('active');
+        }
+        document.getElementById('closeCrudModal').addEventListener('click', () => crudModal.classList.remove('active'));
+        document.getElementById('cancelCrudBtn').addEventListener('click', () => crudModal.classList.remove('active'));
+        document.getElementById('crudForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (currentSubmitHandler) await currentSubmitHandler();
+            crudModal.classList.remove('active');
+        });
+
+        // Realtime Listeners for All Sections
+        let listenersStarted = false;
+        function startListeners() {
+            if (listenersStarted) return;
+            listenersStarted = true;
+
+            // 1. Ratings
+            onValue(ref(db, 'ratings'), (snap) => {
+                const el = document.getElementById('ratingsList');
+                el.innerHTML = '';
+                const entries = snap.exists()
+                    ? Object.entries(snap.val()).map(([id, v]) => ({ id, ...v })).sort((a,b) => (b.pinned||0)-(a.pinned||0) || (b.waktu||0)-(a.waktu||0))
+                    : [];
+                if (!entries.length) { el.innerHTML = '<p class="item-desc">Belum ada ulasan.</p>'; return; }
+                entries.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                                <h4>${escapeHTML(item.nama || 'Anonim')}</h4>
+                                <div>
+                                    ${item.pinned ? '<span class="badge pinned">Pinned</span>' : ''}
+                                    ${item.hidden ? '<span class="badge hidden-item">Hidden</span>' : ''}
+                                </div>
+                            </div>
+                            <div class="item-meta">${escapeHTML(item.bidang || item.role || 'Tamu')} • ⭐ ${Number(item.rating)||5}/5</div>
+                            <p class="item-desc">"${escapeHTML(item.pesan || '')}"</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-sm" data-act="pin">${item.pinned ? 'Unpin' : 'Pin'}</button>
+                            <button class="btn btn-sm" data-act="hide">${item.hidden ? 'Tampilkan' : 'Sembunyikan'}</button>
+                            <button class="btn btn-sm" data-act="edit">Edit</button>
+                            <button class="btn btn-sm btn-danger" data-act="del">Hapus</button>
+                        </div>
+                    `;
+                    card.querySelector('[data-act="pin"]').onclick = () => update(ref(db, `ratings/${item.id}`), { pinned: item.pinned ? 0 : 1 });
+                    card.querySelector('[data-act="hide"]').onclick = () => update(ref(db, `ratings/${item.id}`), { hidden: !item.hidden });
+                    card.querySelector('[data-act="del"]').onclick = () => { if (confirm('Hapus ulasan ini?')) remove(ref(db, `ratings/${item.id}`)); };
+                    card.querySelector('[data-act="edit"]').onclick = () => {
+                        openCrudModal('Edit Ulasan', `
+                            <div class="field"><label>Nama (max 25)</label><input id="fNama" maxlength="25" value="${escapeHTML(item.nama||'')}" required></div>
+                            <div class="field"><label>Instansi (max 10)</label><input id="fBidang" maxlength="10" value="${escapeHTML(item.bidang||'')}" required></div>
+                            <div class="field"><label>Rating (1-5)</label><input type="number" id="fRating" min="1" max="5" value="${Number(item.rating)||5}" required></div>
+                            <div class="field"><label>Pesan (max 120)</label><textarea id="fPesan" maxlength="120" required>${escapeHTML(item.pesan||'')}</textarea></div>
+                        `, async () => {
+                            await update(ref(db, `ratings/${item.id}`), {
+                                nama: sanitizeText(document.getElementById('fNama').value, 25),
+                                bidang: sanitizeText(document.getElementById('fBidang').value, 10),
+                                rating: Math.min(5, Math.max(1, parseInt(document.getElementById('fRating').value, 10) || 5)),
+                                pesan: sanitizeText(document.getElementById('fPesan').value, 120)
+                            });
+                            notify('Ulasan diperbarui.');
+                        });
+                    };
+                    el.appendChild(card);
+                });
+            });
+
+            // 2. Ventures
+            onValue(ref(db, 'portfolio/ventures'), (snap) => {
+                const el = document.getElementById('venturesList');
+                el.innerHTML = '';
+                const entries = snap.exists() ? Object.entries(snap.val()).map(([id, v]) => ({ id, ...v })) : [];
+                if (!entries.length) { el.innerHTML = '<p class="item-desc">Belum ada data di DB. Klik "Sync Data Awal ke DB".</p>'; return; }
+                entries.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <div>
+                            <h4>${escapeHTML(item.title)}</h4>
+                            <div class="item-meta">${escapeHTML(item.domain)} • ${escapeHTML(item.status || 'LIVE')}</div>
+                            <p class="item-desc">${escapeHTML(item.description)}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-sm" data-act="edit">Edit</button>
+                            <button class="btn btn-sm btn-danger" data-act="del">Hapus</button>
+                        </div>
+                    `;
+                    card.querySelector('[data-act="del"]').onclick = () => { if (confirm('Hapus platform ini?')) remove(ref(db, `portfolio/ventures/${item.id}`)); };
+                    card.querySelector('[data-act="edit"]').onclick = () => editVentureModal(item);
+                    el.appendChild(card);
+                });
+            });
+
+            // 3. Experience
+            onValue(ref(db, 'portfolio/experience'), (snap) => {
+                const el = document.getElementById('experienceList');
+                el.innerHTML = '';
+                const entries = snap.exists() ? Object.entries(snap.val()).map(([id, v]) => ({ id, ...v })) : [];
+                if (!entries.length) { el.innerHTML = '<p class="item-desc">Belum ada data di DB. Klik "Sync Data Awal ke DB".</p>'; return; }
+                entries.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <div>
+                            <h4>${escapeHTML(item.title)}</h4>
+                            <div class="item-meta">${escapeHTML(item.group)} ${item.badge ? '• ' + escapeHTML(item.badge) : ''}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-sm" data-act="edit">Edit</button>
+                            <button class="btn btn-sm btn-danger" data-act="del">Hapus</button>
+                        </div>
+                    `;
+                    card.querySelector('[data-act="del"]').onclick = () => { if (confirm('Hapus item ini?')) remove(ref(db, `portfolio/experience/${item.id}`)); };
+                    card.querySelector('[data-act="edit"]').onclick = () => editExpModal(item);
+                    el.appendChild(card);
+                });
+            });
+
+            // 4. Skills
+            onValue(ref(db, 'portfolio/skills'), (snap) => {
+                const el = document.getElementById('skillsList');
+                el.innerHTML = '';
+                const entries = snap.exists() ? Object.entries(snap.val()).map(([id, v]) => ({ id, ...v })) : [];
+                if (!entries.length) { el.innerHTML = '<p class="item-desc">Belum ada data di DB. Klik "Sync Data Awal ke DB".</p>'; return; }
+                entries.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <div>
+                            <h4><i class="${escapeHTML(item.icon || 'fas fa-code')}"></i> ${escapeHTML(item.name)}</h4>
+                            <p class="item-desc">${escapeHTML(item.subtitle || '')}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-sm" data-act="edit">Edit</button>
+                            <button class="btn btn-sm btn-danger" data-act="del">Hapus</button>
+                        </div>
+                    `;
+                    card.querySelector('[data-act="del"]').onclick = () => { if (confirm('Hapus keahlian ini?')) remove(ref(db, `portfolio/skills/${item.id}`)); };
+                    card.querySelector('[data-act="edit"]').onclick = () => editSkillModal(item);
+                    el.appendChild(card);
+                });
+            });
+
+            // 5. Projects
+            onValue(ref(db, 'portfolio/projects'), (snap) => {
+                const el = document.getElementById('projectsList');
+                el.innerHTML = '';
+                const entries = snap.exists() ? Object.entries(snap.val()).map(([id, v]) => ({ id, ...v })) : [];
+                if (!entries.length) { el.innerHTML = '<p class="item-desc">Belum ada data di DB. Klik "Sync Data Awal ke DB".</p>'; return; }
+                entries.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.innerHTML = `
+                        <div>
+                            <h4>${escapeHTML(item.title)}</h4>
+                            <div class="item-meta">${escapeHTML(item.tag)} • ${(item.images||[]).length} Foto</div>
+                            <p class="item-desc">${escapeHTML(item.description)}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-sm" data-act="edit">Edit</button>
+                            <button class="btn btn-sm btn-danger" data-act="del">Hapus</button>
+                        </div>
+                    `;
+                    card.querySelector('[data-act="del"]').onclick = () => { if (confirm('Hapus proyek ini?')) remove(ref(db, `portfolio/projects/${item.id}`)); };
+                    card.querySelector('[data-act="edit"]').onclick = () => editProjectModal(item);
+                    el.appendChild(card);
+                });
+            });
+
+            // 6. Profile
+            onValue(ref(db, 'portfolio/profile'), (snap) => {
+                if (!snap.exists()) return;
+                const p = snap.val();
+                document.getElementById('profBadge').value = p.badge || '';
+                document.getElementById('profDesc').value = p.heroDesc || '';
+                document.getElementById('profIg').value = p.instagram || '';
+                document.getElementById('profWa').value = p.whatsapp || '';
+                document.getElementById('achTitle').value = p.achTitle || '';
+                document.getElementById('achDesc').value = p.achDesc || '';
+                document.getElementById('achUrl').value = p.achUrl || '';
+            });
+        }
+
+        // Add / Edit Modals
+        document.getElementById('addRatingBtn').addEventListener('click', () => {
+            openCrudModal('Tambah Ulasan', `
+                <div class="field"><label>Nama (max 25)</label><input id="fNama" maxlength="25" required></div>
+                <div class="field"><label>Instansi (max 10)</label><input id="fBidang" maxlength="10" required></div>
+                <div class="field"><label>Rating (1-5)</label><input type="number" id="fRating" min="1" max="5" value="5" required></div>
+                <div class="field"><label>Pesan (max 120)</label><textarea id="fPesan" maxlength="120" required></textarea></div>
+            `, async () => {
+                await set(push(ref(db, 'ratings')), {
+                    nama: sanitizeText(document.getElementById('fNama').value, 25),
+                    bidang: sanitizeText(document.getElementById('fBidang').value, 10),
+                    rating: Math.min(5, Math.max(1, parseInt(document.getElementById('fRating').value, 10) || 5)),
+                    pesan: sanitizeText(document.getElementById('fPesan').value, 120),
+                    waktu: Date.now(), kategori: 'umum', hidden: false, pinned: 0
+                });
+                notify('Ulasan ditambahkan.');
+            });
+        });
+
+        function editVentureModal(item = null) {
+            openCrudModal(item ? 'Edit Platform' : 'Tambah Platform', `
+                <div class="field"><label>Nama Platform</label><input id="vTitle" value="${escapeHTML(item?.title||'')}" required></div>
+                <div class="field"><label>Domain</label><input id="vDomain" value="${escapeHTML(item?.domain||'')}" required></div>
+                <div class="field"><label>URL Lengkap (https://...)</label><input type="url" id="vUrl" value="${escapeHTML(item?.url||'')}" required></div>
+                <div class="field"><label>Status Badge</label><input id="vStatus" value="${escapeHTML(item?.status||'LIVE')}" required></div>
+                <div class="field"><label>Ikon FontAwesome</label><input id="vIcon" value="${escapeHTML(item?.icon||'fas fa-globe')}" required></div>
+                <div class="field"><label>Deskripsi</label><textarea id="vDesc" required>${escapeHTML(item?.description||'')}</textarea></div>
+            `, async () => {
+                const url = document.getElementById('vUrl').value.trim();
+                if (!isSafeUrl(url)) { notify('URL tidak valid!', true); return; }
+                const payload = {
+                    title: sanitizeText(document.getElementById('vTitle').value, 80),
+                    domain: sanitizeText(document.getElementById('vDomain').value, 80),
+                    url,
+                    status: sanitizeText(document.getElementById('vStatus').value, 20),
+                    icon: sanitizeText(document.getElementById('vIcon').value, 50),
+                    description: sanitizeText(document.getElementById('vDesc').value, 300)
+                };
+                if (item) await update(ref(db, `portfolio/ventures/${item.id}`), payload);
+                else await set(push(ref(db, 'portfolio/ventures')), payload);
+                notify('Platform tersimpan.');
+            });
+        }
+        document.getElementById('addVentureBtn').addEventListener('click', () => editVentureModal());
+
+        function editExpModal(item = null) {
+            openCrudModal(item ? 'Edit Karier / Pengalaman' : 'Tambah Karier / Pengalaman', `
+                <div class="field"><label>Kategori</label>
+                    <select id="eGroup">
+                        <option value="Pendidikan & Kepelatihan" ${item?.group==='Pendidikan & Kepelatihan'?'selected':''}>Pendidikan &amp; Kepelatihan</option>
+                        <option value="Bisnis & Unit Usaha" ${item?.group==='Bisnis & Unit Usaha'?'selected':''}>Bisnis &amp; Unit Usaha</option>
+                        <option value="Jabatan Organisasi Aktif" ${item?.group==='Jabatan Organisasi Aktif'?'selected':''}>Jabatan Organisasi Aktif</option>
+                        <option value="Pengalaman Organisasi" ${item?.group==='Pengalaman Organisasi'?'selected':''}>Pengalaman Organisasi</option>
+                    </select>
+                </div>
+                <div class="field"><label>Judul / Keterangan</label><input id="eTitle" value="${escapeHTML(item?.title||'')}" required></div>
+                <div class="field"><label>Badge Opsional (mis. Pendidik, Tech, Live)</label><input id="eBadge" value="${escapeHTML(item?.badge||'')}"></div>
+            `, async () => {
+                const payload = {
+                    group: document.getElementById('eGroup').value,
+                    title: sanitizeText(document.getElementById('eTitle').value, 140),
+                    badge: sanitizeText(document.getElementById('eBadge').value, 25)
+                };
+                if (item) await update(ref(db, `portfolio/experience/${item.id}`), payload);
+                else await set(push(ref(db, 'portfolio/experience')), payload);
+                notify('Data karier tersimpan.');
+            });
+        }
+        document.getElementById('addExpBtn').addEventListener('click', () => editExpModal());
+
+        function editSkillModal(item = null) {
+            openCrudModal(item ? 'Edit Keahlian' : 'Tambah Keahlian', `
+                <div class="field"><label>Nama Keahlian</label><input id="sName" value="${escapeHTML(item?.name||'')}" required></div>
+                <div class="field"><label>Subjudul</label><input id="sSub" value="${escapeHTML(item?.subtitle||'')}" required></div>
+                <div class="field"><label>Ikon FontAwesome</label><input id="sIcon" value="${escapeHTML(item?.icon||'fas fa-code')}" required></div>
+                <div class="field"><label>Warna Hex</label><input id="sColor" value="${escapeHTML(item?.color||'#00d2ff')}"></div>
+            `, async () => {
+                const payload = {
+                    name: sanitizeText(document.getElementById('sName').value, 50),
+                    subtitle: sanitizeText(document.getElementById('sSub').value, 80),
+                    icon: sanitizeText(document.getElementById('sIcon').value, 50),
+                    color: sanitizeText(document.getElementById('sColor').value, 20)
+                };
+                if (item) await update(ref(db, `portfolio/skills/${item.id}`), payload);
+                else await set(push(ref(db, 'portfolio/skills')), payload);
+                notify('Keahlian tersimpan.');
+            });
+        }
+        document.getElementById('addSkillBtn').addEventListener('click', () => editSkillModal());
+
+        function editProjectModal(item = null) {
+            openCrudModal(item ? 'Edit Proyek' : 'Tambah Proyek', `
+                <div class="field"><label>Judul Proyek</label><input id="pTitle" value="${escapeHTML(item?.title||'')}" required></div>
+                <div class="field"><label>Kategori Filter</label>
+                    <select id="pType">
+                        <option value="webapp" ${item?.type==='webapp'?'selected':''}>Web App</option>
+                        <option value="org" ${item?.type==='org'?'selected':''}>Organisasi &amp; Lembaga</option>
+                        <option value="commerce" ${item?.type==='commerce'?'selected':''}>Bisnis &amp; E-Commerce</option>
+                    </select>
+                </div>
+                <div class="field"><label>Tag Badge</label><input id="pTag" value="${escapeHTML(item?.tag||'Web App')}" required></div>
+                <div class="field"><label>Deskripsi</label><textarea id="pDesc" required>${escapeHTML(item?.description||'')}</textarea></div>
+                <div class="field"><label>Daftar Path Gambar (pisahkan dengan koma)</label><textarea id="pImgs" required>${escapeHTML((item?.images||[]).join(', '))}</textarea></div>
+            `, async () => {
+                const imgs = document.getElementById('pImgs').value.split(',').map(s => sanitizeText(s, 200)).filter(Boolean);
+                const payload = {
+                    title: sanitizeText(document.getElementById('pTitle').value, 100),
+                    type: document.getElementById('pType').value,
+                    tag: sanitizeText(document.getElementById('pTag').value, 40),
+                    description: sanitizeText(document.getElementById('pDesc').value, 300),
+                    images: imgs
+                };
+                if (item) await update(ref(db, `portfolio/projects/${item.id}`), payload);
+                else await set(push(ref(db, 'portfolio/projects')), payload);
+                notify('Proyek tersimpan.');
+            });
+        }
+        document.getElementById('addProjectBtn').addEventListener('click', () => editProjectModal());
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const ig = document.getElementById('profIg').value.trim();
+            const wa = document.getElementById('profWa').value.trim();
+            const achUrl = document.getElementById('achUrl').value.trim();
+            if (!isSafeUrl(ig) || !isSafeUrl(wa) || !isSafeUrl(achUrl)) {
+                notify('Pastikan semua URL valid (http/https).', true);
+                return;
+            }
+            await set(ref(db, 'portfolio/profile'), {
+                badge: sanitizeText(document.getElementById('profBadge').value, 80),
+                heroDesc: sanitizeText(document.getElementById('profDesc').value, 360),
+                instagram: ig,
+                whatsapp: wa,
+                achTitle: sanitizeText(document.getElementById('achTitle').value, 100),
+                achDesc: sanitizeText(document.getElementById('achDesc').value, 400),
+                achUrl
+            });
+            notify('Profil & Prestasi berhasil disimpan.');
+        });
+
+        // Backup JSON
+        document.getElementById('exportJsonBtn').addEventListener('click', async () => {
+            const snap = await get(ref(db, '/'));
+            const blob = new Blob([JSON.stringify(snap.val() || {}, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `backup-portfolio-${firebaseConfig.projectId}.json`;
+            a.click();
+        });
+
+        // Seed Initial Portfolio Data to DB
+        document.getElementById('seedDefaultBtn').addEventListener('click', async () => {
+            if (!confirm('Isi / sinkronkan data awal portofolio ke database aktif?')) return;
+            await set(ref(db, 'portfolio'), {
+                profile: {
+                    badge: 'Tech Entrepreneur • Developer • Educator',
+                    heroDesc: 'Full Stack Developer dan Tech Entrepreneur yang merancang platform SaaS bisnis, sistem pemerintahan daerah, hingga berkontribusi aktif sebagai tenaga pengajar di SD Al-Fatih Paiton & SDN Patokan 1 serta pemateri di Paskibraka Kabupaten.',
+                    instagram: 'https://instagram.com/_.adityaptra',
+                    whatsapp: 'https://wa.me/6285176871609',
+                    achTitle: 'Komandan Upacara HARDIKNAS 2024',
+                    achDesc: 'Dipercaya mengemban amanah sebagai Komandan Upacara pada Peringatan Hari Pendidikan Nasional (HARDIKNAS) Tingkat Kabupaten di Alun-alun Kraksaan Tahun 2024.',
+                    achUrl: 'https://www.kabarpas.com/tari-glipang-sewu-semarakkan-peringatan-hardiknas-di-probolinggo/'
+                },
+                ventures: {
+                    v1: { title: 'QR-inAja', domain: 'qr-inaja.biz.id', url: 'https://qr-inaja.biz.id', status: 'LIVE', icon: 'fas fa-qrcode', description: 'Platform digital inovatif untuk kebutuhan solusi QR Code modern, mempermudah akses informasi dan integrasi layanan secara cepat.' },
+                    v2: { title: 'ArtaPOS', domain: 'artapos.id', url: 'https://artapos.id', status: 'LIVE', icon: 'fas fa-cash-register', description: 'Sistem Point of Sale (POS) dan manajemen kasir bisnis modern untuk pencatatan transaksi, stok barang, dan laporan keuangan UMKM.' },
+                    v3: { title: 'Web PPI Kab. Probolinggo', domain: 'ppikabprobolinggo.id', url: 'https://ppikabprobolinggo.id', status: 'OFFICIAL', icon: 'fas fa-landmark', description: 'Portal resmi lembaga/pemerintahan daerah untuk Purna Paskibraka Indonesia Kabupaten Probolinggo.' },
+                    v4: { title: 'Rental HT Kraksaan', domain: 'rentalhtkraksaan.vercel.app', url: 'https://rentalhtkraksaan.vercel.app', status: 'LIVE', icon: 'fas fa-walkie-talkie', description: 'Website resmi layanan penyewaan Handy Talky (HT) untuk kebutuhan event, kepanitiaan, dan koordinasi lapangan.' }
+                },
+                experience: {
+                    e1: { group: 'Pendidikan & Kepelatihan', title: 'Tenaga Pengajar di SD Al-Fatih Paiton', badge: 'Pendidik' },
+                    e2: { group: 'Pendidikan & Kepelatihan', title: 'Tenaga Pengajar di SDN Patokan 1', badge: 'Pendidik' },
+                    e3: { group: 'Pendidikan & Kepelatihan', title: 'Pemateri di Paskibraka Kabupaten', badge: 'Pemateri' },
+                    e4: { group: 'Pendidikan & Kepelatihan', title: 'Pelatih Paskibra di SMP 1 Kraksaan (2024 – Sekarang)', badge: '' },
+                    e5: { group: 'Pendidikan & Kepelatihan', title: 'Pelatih Paskibra di SD Namira (2024 – Sekarang)', badge: '' },
+                    e6: { group: 'Pendidikan & Kepelatihan', title: 'Event Organizer (EO) Ramadhan Fest (2026)', badge: '' },
+                    b1: { group: 'Bisnis & Unit Usaha', title: 'Founder qr-inaja.biz.id', badge: 'Tech' },
+                    b2: { group: 'Bisnis & Unit Usaha', title: 'Founder artapos.id', badge: 'Tech' },
+                    b3: { group: 'Bisnis & Unit Usaha', title: 'Sewa HT Kraksaan — rentalhtkraksaan.vercel.app', badge: 'Live' },
+                    b4: { group: 'Bisnis & Unit Usaha', title: 'Bisnis Ayam Bakar', badge: '' },
+                    b5: { group: 'Bisnis & Unit Usaha', title: 'Owner Coconut Shell Charcoal', badge: '' },
+                    b6: { group: 'Bisnis & Unit Usaha', title: 'Penjualan ID Card & Penyedia Baju PDH', badge: '' },
+                    o1: { group: 'Jabatan Organisasi Aktif', title: 'Vice President CLUB WIRAUSAHA UNUJA', badge: '' },
+                    o2: { group: 'Jabatan Organisasi Aktif', title: 'HEAD OF DEPARTMENT BEM Fakultas Teknik', badge: '' },
+                    o3: { group: 'Jabatan Organisasi Aktif', title: 'Speaker PMB UNUJA', badge: '' },
+                    o4: { group: 'Jabatan Organisasi Aktif', title: 'KWH PPI', badge: '' },
+                    o5: { group: 'Jabatan Organisasi Aktif', title: 'Media Creative GYN', badge: '' },
+                    p1: { group: 'Pengalaman Organisasi', title: 'Ketua Angkatan Paskibraka (2023)', badge: '' },
+                    p2: { group: 'Pengalaman Organisasi', title: 'Bidang Kepelatihan Kompas Matura (2023)', badge: '' },
+                    p3: { group: 'Pengalaman Organisasi', title: 'Networking CLUB WIRAUSAHA UNUJA (2024)', badge: '' },
+                    p4: { group: 'Pengalaman Organisasi', title: 'Volunteer Senyum Anak Nusantara (2025)', badge: '' }
+                },
+                skills: {
+                    s1: { name: 'HTML5 / CSS3', subtitle: 'Semantic & Modern UI', icon: 'fab fa-html5', color: '#e34f26' },
+                    s2: { name: 'Tailwind CSS', subtitle: 'Utility-First Styling', icon: 'fas fa-wind', color: '#38bdf8' },
+                    s3: { name: 'JavaScript', subtitle: 'Interactive Web Logic', icon: 'fab fa-js', color: '#f7df1e' },
+                    s4: { name: 'PHP', subtitle: 'Backend & Server Side', icon: 'fab fa-php', color: '#8892be' },
+                    s5: { name: 'SQL Database', subtitle: 'Relational Data Design', icon: 'fas fa-database', color: '#38bdf8' },
+                    s6: { name: 'React JS', subtitle: 'Component Architecture', icon: 'fab fa-react', color: '#61dafb' },
+                    s7: { name: 'Firebase', subtitle: 'Realtime Database & Auth', icon: 'fas fa-fire', color: '#ffca28' },
+                    s8: { name: 'Business Management', subtitle: 'Strategy & Operations', icon: 'fas fa-chart-line', color: '#10b981' },
+                    s9: { name: 'Leadership & Teaching', subtitle: 'Coaching & Public Speaking', icon: 'fas fa-users', color: '#f59e0b' }
+                },
+                projects: {
+                    pr1: { title: 'Website Kasir Dinamis', type: 'webapp', tag: 'Web App', description: 'Sistem Point of Sale (POS) dinamis untuk memudahkan transaksi dan manajemen inventaris toko.', images: ['proyek/kasir 1.jpg','proyek/kasir 2.jpg','proyek/kasir 3.jpg','proyek/kasir 4.jpg','proyek/kasir 5.jpg'] },
+                    pr2: { title: 'Website PPI Roadshow', type: 'org', tag: 'Landing Page', description: 'Halaman informatif interaktif untuk mempromosikan dan mengelola event Purna Paskibraka Indonesia.', images: ['proyek/rds 1.jpg','proyek/rds 2.jpg','proyek/rds 3.jpg','proyek/rds 4.jpg','proyek/rds 5.jpg'] },
+                    pr3: { title: 'Website Ormawa CW UNUJA', type: 'org', tag: 'Organisasi', description: 'Portal resmi untuk organisasi Club Wirausaha UNUJA yang menampilkan struktur dan program kerja.', images: ['proyek/cwu 1.jpg','proyek/cwu 2.jpg','proyek/cwu 3.jpg','proyek/cwu 4.jpg','proyek/cwu 5.jpg'] },
+                    pr4: { title: 'Website Rental HT Kraksaan', type: 'commerce', tag: 'E-Commerce', description: 'Platform pemesanan dan penyewaan Handy Talky (HT) secara online yang cepat dan efisien.', images: ['proyek/ht 1.jpg','proyek/ht 2.jpg','proyek/ht 3.jpg','proyek/ht 4.jpg','proyek/ht 5.jpg'] },
+                    pr5: { title: 'Sistem UKS Terintegrasi Admin', type: 'webapp', tag: 'Web App', description: 'Platform manajemen Unit Kesehatan Sekolah dengan rekam medis terintegrasi dan dashboard admin.', images: ['proyek/uks 1.jpg','proyek/uks 2.jpg','proyek/uks 3.jpg','proyek/uks 4.jpg','proyek/uks 5.jpg'] },
+                    pr6: { title: 'Web PPI Umum & Roadshow Integrasi Admin', type: 'org', tag: 'Web App & Organisasi', description: 'Website Purna Paskibraka Indonesia dengan fitur roadshow dinamis yang terintegrasi pengelola admin.', images: ['proyek/ppi umum 1.jpg','proyek/ppi umum 2.jpg','proyek/ppi umum 3.jpg','proyek/ppi umum 4.jpg','proyek/ppi umum 5.jpg'] }
+                }
+            });
+            notify('Seluruh data awal portofolio berhasil disinkronkan ke DB!');
+        });
+    </script>
+</body>
+</html>
