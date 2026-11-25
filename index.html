@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #000c18;
+            --primary-color: #00d2ff;
+            --secondary-color: #3a7bd5;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(0, 210, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(58, 123, 213, 0.15) 0%, transparent 50%) var(--bg-color);
+            background-size: 200% 200%;
+            animation: bgShift 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 12, 24, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s, text-shadow 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 8px var(--primary-color);
+        }
+
+        /* Hero Section */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+        }
+
+        .hero-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 50px;
+            flex-wrap: wrap-reverse;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            flex: 1;
+            min-width: 300px;
+            max-width: 650px;
+            z-index: 10;
+        }
+
+        @keyframes profileEntrance {
+            0% { transform: scale(0.4) translateY(150px) rotate(-15deg); opacity: 0; filter: blur(15px); }
+            60% { transform: scale(1.05) translateY(-15px) rotate(5deg); opacity: 1; filter: blur(0); }
+            100% { transform: scale(1) translateY(0) rotate(0deg); opacity: 1; filter: blur(0); }
+        }
+
+        .hero-image {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            animation: profileEntrance 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .img-box {
+            position: relative;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center top;
+            border: 6px solid var(--bg-color);
+            transition: transform 0.3s ease;
+        }
+
+        .img-box:hover img {
+            transform: scale(1.05);
+        }
+
+        .hero-content h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            line-height: 1.1;
+        }
+
+        .hero-content h1 span {
+            color: var(--secondary-color);
+            text-shadow: 0 0 20px rgba(58, 123, 213, 0.6);
+        }
+
+        .typed-text {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            background: rgba(0, 210, 255, 0.15);
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        .hero-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.6), 0 0 40px rgba(0, 210, 255, 0.4);
+            transform: translateY(-3px);
+        }
+
+        @keyframes pulseBtn {
+            0% { box-shadow: 0 0 10px rgba(0, 210, 255, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(0, 210, 255, 0.8), 0 0 10px rgba(0, 210, 255, 0.5); }
+            100% { box-shadow: 0 0 10px rgba(0, 210, 255, 0.4); }
+        }
+
+        .primary-btn {
+            background: var(--primary-color);
+            color: #000;
+            animation: pulseBtn 2.5s infinite;
+        }
+        .primary-btn:hover {
+            background: transparent;
+            color: var(--primary-color);
+            animation: none;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .social-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            color: #fff;
+            font-size: 1.4rem;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
+        }
+
+        .social-icon.ig:hover {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border-color: transparent;
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 15px 25px rgba(220, 39, 67, 0.4);
+        }
+
+        .social-icon.wa:hover {
+            background: #25D366;
+            border-color: transparent;
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 15px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Floating Shape Decor */
+        .shape {
+            position: absolute;
+            filter: blur(50px);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+        .shape-1 {
+            width: 300px; height: 300px;
+            background: rgba(0, 210, 255, 0.15);
+            border-radius: 50%;
+            top: 20%; right: 10%;
+        }
+        .shape-2 {
+            width: 250px; height: 250px;
+            background: rgba(58, 123, 213, 0.15);
+            border-radius: 50%;
+            bottom: 10%; left: 20%;
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); filter: blur(50px); }
+            50% { transform: translateY(-30px) scale(1.1); filter: blur(60px); }
+            100% { transform: translateY(0) scale(1); filter: blur(50px); }
+        }
+
+        /* Section Global */
+        section {
+            padding: 100px 10%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--text-main);
+        }
+
+        .section-title span {
+            color: var(--primary-color);
+        }
+
+        /* About & Experience Section */
+        .experience-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .experience-box, .business-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .experience-box h3, .business-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+            border-left: 2px solid var(--glass-border);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            background: var(--bg-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .timeline-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .section-badge {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            padding-left: 10px;
+            border-left: 4px solid var(--primary-color);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .category-title {
+            color: #ff4d79;
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .custom-list {
+            list-style: none;
+            margin-bottom: 35px;
+        }
+
+        .custom-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            color: #fff;
+            line-height: 1.5;
+        }
+
+        .custom-list li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: #ffb400;
+            font-size: 0.8rem;
+        }
+
+        /* Prestasi Terpilih */
+        .achievement-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .achievement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .achievement-desc {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .btn-data {
+            background: var(--primary-color);
+            color: #000 !important;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-data:hover {
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+            background: #fff;
+        }
+
+        .video-portrait {
+            width: 100%;
+            max-width: 280px; 
+            border-radius: 12px;
+            border: 2px solid var(--primary-color);
+            display: block;
+            margin: 15px auto 0;
+            background-color: #000;
+        }
+
+        video::-internal-media-controls-download-button {
+            display: none;
+        }
+        video::-webkit-media-controls-enclosure {
+            overflow: hidden;
+        }
+        video::-webkit-media-controls-panel {
+            width: calc(100% + 30px);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .skill-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 20px 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            cursor: pointer;
+        }
+
+        .skill-box:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
+        }
+
+        .skill-box i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .skill-box span {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 210, 255, 0.3);
+            border-color: rgba(0, 210, 255, 0.5);
+        }
+
+        .project-img {
+            height: 200px;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-img > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .project-card:hover .project-img > img {
+            transform: scale(1.1);
+        }
+
+        .project-carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            height: 100%;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        .project-carousel::-webkit-scrollbar { display: none; }
+        .project-carousel img {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            scroll-snap-align: center;
+        }
+        .scroll-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            pointer-events: none;
+        }
+
+        .project-info {
+            padding: 25px;
+        }
+
+        .project-info h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            color: #fff;
+        }
+
+        .project-info p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--primary-color);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* Reviews/Testimonials Section */
+        .reviews-slider {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--glass-bg);
+        }
+
+        .reviews-slider::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .reviews-slider::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+
+        .review-card {
+            min-width: 350px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .review-stars {
+            color: #ffb400;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .review-text {
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 15px;
+        }
+
+        .author-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .author-info h4 {
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 3px;
+        }
+
+        .author-info span {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+
+        #emptyReviews {
+            text-align: center;
+            width: 100%;
+            color: var(--text-muted);
+            padding: 20px;
+        }
+
+        /* CTA Section */
+        #contact {
+            text-align: center;
+            background: linear-gradient(to top, rgba(0, 210, 255, 0.05), transparent);
+            padding-bottom: 150px;
+        }
+
+        #contact p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: var(--text-muted);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.8);
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px 0;
+                gap: 15px;
+            }
+            .nav-links { 
+                display: flex;
+                width: 100%;
+                overflow-x: auto;
+                padding: 0 5% 5px;
+                gap: 20px;
+                justify-content: flex-start;
+                scrollbar-width: none;
+            }
+            .nav-links::-webkit-scrollbar { display: none; }
+            .nav-links a { white-space: nowrap; font-size: 0.9rem; }
+            .hero-wrapper {
+                flex-direction: column-reverse;
+                text-align: center;
+                gap: 30px;
+                padding-top: 140px;
+            }
+            .hero-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .hero-content h3 { font-size: 1.2rem; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1rem; padding: 0 10px; }
+            .img-box {
+                width: 260px;
+                height: 260px;
+                margin: 0 auto;
+            }
+            .experience-grid {
+                grid-template-columns: 1fr;
+            }
+            .action-btns {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .review-card { min-width: 280px; }
+        }
+
+        @media (max-width: 480px) {
+            .img-box {
+                width: 220px;
+                height: 220px;
+            }
+            .hero-content h1 { font-size: 2rem; }
+            .action-btns {
+                width: 100%;
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* OVERRIDES & NEW STYLES */
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Modal for Digital Projects */
+        .project-card { cursor: pointer; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+            z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            width: 95%; max-width: 1000px; max-height: 95vh; background: var(--bg-color); padding: 10px 10px 5px 10px; border-radius: 12px;
+            position: relative; border: 1px solid var(--glass-border);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .close-modal {
+            position: absolute; top: -15px; right: -10px; font-size: 1.8rem; color: #fff; cursor: pointer; transition: all 0.3s;
+            z-index: 30; background: #e63946; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 2px solid var(--bg-color);
+        }
+        .close-modal:hover { background: #b00020; transform: scale(1.1); }
+        .modal-gallery {
+            display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 0; border-radius: 8px;
+            scroll-behavior: smooth; scrollbar-width: none; width: 100%; max-height: calc(95vh - 40px);
+        }
+        .modal-gallery::-webkit-scrollbar { display: none; }
+        .modal-gallery img {
+            flex: 0 0 100%; max-height: calc(95vh - 50px); max-width: 100%; object-fit: contain; scroll-snap-align: center;
+        }
+        .nav-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5); color: white; border: 1px solid var(--glass-border);
+            width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem;
+            cursor: pointer; z-index: 20; display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease; backdrop-filter: blur(5px);
+        }
+        .nav-btn:hover { background: var(--primary-color); color: #000; box-shadow: 0 0 15px var(--primary-color); }
+        .prev-btn { left: 15px; }
+        .next-btn { right: 15px; }
+
+        @media (max-width: 768px) {
+            .nav-btn { width: 35px; height: 35px; font-size: 1.2rem; }
+            .prev-btn { left: 5px; }
+            .next-btn { right: 5px; }
+        }
+
+        /* Responsive Mobile Changes */
+        @media (max-width: 768px) {
+            nav { flex-direction: row; justify-content: space-between; align-items: center; padding: 15px 5%; }
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%;
+                background: rgba(0, 12, 24, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border);
+                padding: 15px 5%; gap: 15px;
+                z-index: 1000;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links a { width: 100%; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+            .reviews-slider {
+                flex-direction: column; max-height: 500px; overflow-y: auto; overflow-x: hidden;
+                scroll-snap-type: y mandatory; padding: 10px; gap: 15px;
+            }
+            .review-card { min-width: 100%; scroll-snap-align: start; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">Aditya.</a>
+        <div class="menu-toggle" id="mobile-menu-toggle"><i class="fas fa-bars"></i></div>
+        <div class="nav-links" id="nav-links">
+            <a href="#home">Home</a>
+            <a href="#experience">Pengalaman</a>
+            <a href="#skills">Keahlian</a>
+            <a href="#projects">Proyek</a>
+            <a href="#reviews">Ulasan</a>
+        </div>
+    </nav>
+
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+
+    <section id="home">
+        <div class="hero-wrapper">
+            <div class="hero-content" data-aos="fade-right" data-aos-duration="1000">
+                <h3>Halo, Nama saya</h3>
+                <h1>Aditya <br><span>Saya Seorang <br><span class="typed-text"></span></span></h1>
+                <div class="role-badge" data-aos="zoom-in" data-aos-delay="100"><i class="fas fa-laptop-code"></i> Full Stack Developer </div>
+                <p data-aos="fade-up" data-aos-delay="200">Selamat datang di dunia kreatif saya. Saya berdedikasi untuk menciptakan pengalaman digital yang menarik, dinamis, dan memberikan dampak positif serta memimpin bisnis teknologi inovatif.</p>
+                <div class="action-btns" data-aos="fade-up" data-aos-delay="300">
+                    <a href="#projects" class="btn primary-btn">Lihat Karya</a>
+                    <a href="#reviews" class="btn">Lihat Ulasan</a>
+                </div>
+                <div class="social-links" data-aos="fade-up" data-aos-delay="400">
+                    <a href="https://instagram.com/_.adityaptra" target="_blank" class="social-icon ig" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/6285176871609" target="_blank" class="social-icon wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="img-box">
+                    <img src="IMG_20251214_222804.jpg" alt="Foto Profil Aditya">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PENGALAMAN, ORGANISASI, DAN BISNIS -->
+    <section id="experience">
+        <h2 class="section-title" data-aos="fade-up">Perjalanan <span>Karier</span></h2>
+        <div class="experience-grid">
+            
+            <!-- Organisasi -->
+            <div class="business-box" data-aos="fade-right" data-aos-duration="1000">
+                <div class="section-badge">ORGANISASI & PENGALAMAN</div>
+                
+                <h4 class="category-title">JABATAN ORGANISASI AKTIF</h4>
+                <ul class="custom-list">
+                    <li>Vice President CLUB WIRAUSAHA UNUJA</li>
+                    <li>HEAD OF DEPARTMENT BEM Fakultas Teknik</li>
+                    <li>Speaker PMB UNUJA</li>
+                    <li>KWH PPI</li>
+                  
+                    <li>Media Creative GYN</li>
+                </ul>
+
+                <h4 class="category-title">PENGALAMAN ORGANISASI</h4>
+                <ul class="custom-list">
+                    <li>Ketua Angkatan Paskibraka (2023)</li>
+                    <li>Bidang Kepelatihan Kompas Matura (2023)</li>
+                    <li>Volunteer Senyum Anak Nusantara (2025)</li>
+                    <li>Networking CLUB WIRAUSAHA UNUJA (2024)</li>
+                </ul>
+            </div>
+
+            <!-- Bisnis & Profesi -->
+            <div class="experience-box" data-aos="fade-left" data-aos-duration="1000">
+                <div class="section-badge">BISNIS & PROFESI</div>
+                
+                <h4 class="category-title">BISNIS SAYA</h4>
+                <ul class="custom-list">
+                    <li>Sewa HT Kraksaan</li>
+                    <li>Bisnis Ayam Bakar</li>
+                    <li>Owner Coconut shell charcoal</li>
+                    <li>Penjualan ID Card</li>
+                    <li>Penyedia Baju PDH</li>
+                </ul>
+
+                <h4 class="category-title">PENGALAMAN PROFESI & EVENT</h4>
+                <ul class="custom-list">
+                    <li>Pelatih Paskibra di SMP 1 Kraksaan (2024 - Sekarang)</li>
+                    <li>Pelatih Paskibra di SD Namira (2024 - Sekarang)</li>
+                    <li>Event Organizer (EO) Ramadhan Fest (2026)</li>
+                </ul>
+            </div>
+
+            <!-- Prestasi Terpilih -->
+            <div class="experience-box" style="grid-column: 1 / -1;" data-aos="fade-up" data-aos-duration="1000">
+                <div class="section-badge">PRESTASI TERPILIH</div>
+                
+                <div class="achievement-container">
+                    <div class="achievement-header">
+                        <strong style="color: var(--primary-color); font-size: 1.2rem;">Komandan Upacara HARDIKNAS</strong>
+                        <div class="btn-group">
+                            <a href="https://www.kabarpas.com/tari-glipang-sewu-semarakkan-peringatan-hardiknas-di-probolinggo/" target="_blank" class="btn-data">Data asli</a>
+                        </div>
+                    </div>
+
+                    <span class="achievement-desc">
+                        Dipercaya menjadi Komandan Upacara pada Peringatan Hari Pendidikan Nasional di alun-alun Kraksaan Tahun 2024.
+                    </span>
+
+                    <video 
+                        class="video-portrait"
+                        controls 
+                        autoplay 
+                        playsinline 
+                        preload="auto"
+                        controlsList="nodownload" 
+                        oncontextmenu="return false;">
+                        <source src="video.mp4" type="video/mp4">
+                        Browser Anda tidak mendukung video.
+                    </video>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="skills">
+        <h2 class="section-title" data-aos="fade-up">Keahlian <span>Utama</span></h2>
+        <div class="skills-container">
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="100">
+                <i class="fab fa-html5"></i>
+                <span>HTML5 / CSS3</span>
+            </div>
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="125">
+                <i class="fas fa-wind" style="color: #38bdf8;"></i>
+                <span>Tailwind CSS</span>
+            </div>
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="150">
+                <i class="fab fa-js"></i>
+                <span>JavaScript</span>
+            </div>
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="200">
+                <i class="fab fa-php"></i>
+                <span>PHP</span>
+            </div>
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="250">
+                <i class="fas fa-database"></i>
+                <span>SQL Database</span>
+            </div>
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="300">
+                <i class="fab fa-react"></i>
+                <span>React JS</span>
+            </div>
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="350">
+                <i class="fas fa-fire" style="color: #ffca28;"></i>
+                <span>Firebase</span>
+            </div>
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="400">
+                <i class="fas fa-chart-line"></i>
+                <span>Business Management</span>
+            </div>
+            <div class="skill-box" data-aos="zoom-in" data-aos-delay="450">
+                <i class="fas fa-users"></i>
+                <span>Leadership</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2 class="section-title" data-aos="fade-up">Proyek <span>Digital</span></h2>
+        <div class="projects-grid">
+            <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+                <div class="project-img"><img src="proyek/kasir 1.jpg" alt="Website Kasir Dinamis"><div class="scroll-hint">Klik Lihat Detail</div></div>
+                <div class="project-info">
+                    <span class="tag">Web App</span>
+                    <h3>Website Kasir Dinamis</h3>
+                    <p>Sistem Point of Sale (POS) dinamis untuk memudahkan transaksi dan manajemen inventaris toko.</p>
+                </div>
+            </div>
+            <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+                <div class="project-img"><img src="proyek/rds 1.jpg" alt="Website PPI Roadshow"><div class="scroll-hint">Klik Lihat Detail</div></div>
+                <div class="project-info">
+                    <span class="tag">Landing Page</span>
+                    <h3>Website PPI Roadshow</h3>
+                    <p>Halaman informatif interaktif untuk mempromosikan dan mengelola event Purna Paskibraka Indonesia.</p>
+                </div>
+            </div>
+            <div class="project-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="project-img"><img src="proyek/cwu 1.jpg" alt="Website Ormawa CW UNUJA"><div class="scroll-hint">Klik Lihat Detail</div></div>
+                <div class="project-info">
+                    <span class="tag">Organisasi</span>
+                    <h3>Website Ormawa CW UNUJA</h3>
+                    <p>Portal resmi untuk organisasi Club Wirausaha UNUJA yang menampilkan struktur dan program kerja.</p>
+                </div>
+            </div>
+            <div class="project-card" data-aos="fade-up" data-aos-delay="400">
+                <div class="project-img"><img src="proyek/ht 1.jpg" alt="Website Rental HT Kraksaan"><div class="scroll-hint">Klik Lihat Detail</div></div>
+                <div class="project-info">
+                    <span class="tag">E-Commerce</span>
+                    <h3>Website Rental HT Kraksaan</h3>
+                    <p>Platform pemesanan dan penyewaan Handy Talky (HT) secara online yang cepat dan efisien.</p>
+                </div>
+            </div>
+            <div class="project-card" data-aos="fade-up" data-aos-delay="500">
+                <div class="project-img"><img src="proyek/uks 1.jpg" alt="Sistem UKS Terintegrasi Admin"><div class="scroll-hint">Klik Lihat Detail</div></div>
+                <div class="project-info">
+                    <span class="tag">Web App</span>
+                    <h3>Sistem UKS Terintegrasi Admin</h3>
+                    <p>Platform manajemen Unit Kesehatan Sekolah dengan rekam medis terintegrasi dan dashboard admin.</p>
+                </div>
+            </div>
+            <div class="project-card" data-aos="fade-up" data-aos-delay="600">
+                <div class="project-img"><img src="proyek/ppi umum 1.jpg" alt="Web PPI Umum & Roadshow Integrasi Admin"><div class="scroll-hint">Klik Lihat Detail</div></div>
+                <div class="project-info">
+                    <span class="tag">Web App</span>
+                    <h3>Web PPI Umum & Roadshow Integrasi Admin</h3>
+                    <p>Website Purna Paskibraka Indonesia dengan fitur roadshow dinamis yang terintegrasi pengelola admin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ULASAN GLOBAL -->
+    <section id="reviews">
+        <h2 class="section-title" data-aos="fade-up">Apa Kata <span>Mereka?</span></h2>
+        <div class="reviews-slider" id="reviewsContainer" data-aos="fade-up" data-aos-delay="200">
+            <!-- Reviews akan di-render di sini via JavaScript -->
+        </div>
+    </section>
+
+    <section id="contact" data-aos="fade-up">
+        <h2 class="section-title">Bagaimana <span>Kesan Anda?</span></h2>
+        <p>Pendapat Anda sangat berharga untuk transparansi layanan dan personal branding saya. Ulasan yang Anda berikan akan ditampilkan di platform ini secara real-time.</p>
+        <a href="rating.html" class="btn primary-btn" style="font-size: 1.1rem; padding: 15px 40px;">Beri Nilai & Ulasan <i class="fas fa-arrow-right" style="margin-left: 10px;"></i></a>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Aditya. CEO & Developer. Dibuat dengan antusiasme dan inovasi.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    
+    <script>
+        // Inisialisasi AOS (Animasi saat Scroll)
+        AOS.init({
+            once: true,
+            offset: 100,
+        });
+
+        // Efek Mengetik Otomatis (Typed.js)
+        var typed = new Typed('.typed-text', {
+            strings: ['Full Stack Developer.', 'Tech Entrepreneur.', 'Lead Developer.', 'Kreator Inovator.'],
+            typeSpeed: 60,
+            backSpeed: 40,
+            loop: true,
+            backDelay: 1500
+        });
+
+    </script>
+
+    <!-- Script Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getDatabase, ref, onValue 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcQuP2GFUgljflnmhRZEKtB4R8Zr9ye6Y",
+            authDomain: "cwu-ii-3ae88.firebaseapp.com",
+            databaseURL: "https://cwu-ii-3ae88-default-rtdb.firebaseio.com",
+            projectId: "cwu-ii-3ae88",
+            storageBucket: "cwu-ii-3ae88.firebasestorage.app",
+            messagingSenderId: "259906078778",
+            appId: "1:259906078778:web:3e289947bf2e6b27ce0d03",
+            measurementId: "G-VMF1P71R5Z"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- SISTEM ULASAN DINAMIS DARI FIREBASE ---
+        onValue(ref(db, 'ratings'), (snapshot) => {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = ''; 
+            
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                const allEntries = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+                
+                const ratingList = allEntries
+                    .filter(item => !item.hidden)
+                    .sort((a, b) => (b.pinned || 0) - (a.pinned || 0) || (b.waktu || 0) - (a.waktu || 0))
+                    .slice(0, 20); // Maks 20 ulasan
+
+                ratingList.forEach(review => {
+                    let starsHTML = '';
+                    for(let i=1; i<=5; i++) {
+                        starsHTML += i <= review.rating ? '<i class="fas fa-star" style="color: #ffb400;"></i>' : '<i class="far fa-star" style="color: rgba(255,180,0,0.3);"></i>';
+                    }
+
+                    const nama = review.nama || review.name || "Anonim";
+                    const initial = nama.charAt(0).toUpperCase();
+                    let subInfo = review.kategori === "ppi" ? `Anggota PPI (${review.angkatan || ''}) • ${review.bidang || ''}` : (review.bidang || review.role || "Tamu");
+
+                    const cardHTML = `
+                        <div class="review-card">
+                            <div class="review-stars">
+                                ${starsHTML}
+                                ${review.pinned ? '<span style="color:#00d2ff; font-size:0.55em; float:right; background:rgba(0,210,255,0.1); padding:4px 8px; border-radius:10px;"><i class="fas fa-thumbtack"></i> Pinned</span>' : ''}
+                            </div>
+                            <p class="review-text">"${review.pesan || review.text || ''}"</p>
+                            <div class="review-author">
+                                <div class="author-avatar">${initial}</div>
+                                <div class="author-info">
+                                    <h4>${nama}</h4>
+                                    <span>${subInfo}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += cardHTML;
+                });
+                
+                if (ratingList.length === 0) {
+                    container.innerHTML = '<div id="emptyReviews">Belum ada ulasan yang ditampilkan.</div>';
+                }
+            } else {
+                container.innerHTML = '<div id="emptyReviews">Belum ada ulasan. Jadilah yang pertama!</div>';
+            }
+        });
+
+        // Hamburger Menu Logic
+        const toggle = document.getElementById('mobile-menu-toggle');
+        const navLinks = document.getElementById('nav-links');
+        if (toggle && navLinks) {
+            toggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => navLinks.classList.remove('active'));
+            });
+        }
+
+        // Project Modal Logic (Vanilla JS)
+        const projectData = {
+            'Website Kasir Dinamis': ['proyek/kasir 1.jpg', 'proyek/kasir 2.jpg', 'proyek/kasir 3.jpg', 'proyek/kasir 4.jpg', 'proyek/kasir 5.jpg'],
+            'Website PPI Roadshow': ['proyek/rds 1.jpg', 'proyek/rds 2.jpg', 'proyek/rds 3.jpg', 'proyek/rds 4.jpg', 'proyek/rds 5.jpg'],
+            'Website Ormawa CW UNUJA': ['proyek/cwu 1.jpg', 'proyek/cwu 2.jpg', 'proyek/cwu 3.jpg', 'proyek/cwu 4.jpg', 'proyek/cwu 5.jpg'],
+            'Website Rental HT Kraksaan': ['proyek/ht 1.jpg', 'proyek/ht 2.jpg', 'proyek/ht 3.jpg', 'proyek/ht 4.jpg', 'proyek/ht 5.jpg'],
+            'Sistem UKS Terintegrasi Admin': ['proyek/uks 1.jpg', 'proyek/uks 2.jpg', 'proyek/uks 3.jpg', 'proyek/uks 4.jpg', 'proyek/uks 5.jpg'],
+            'Web PPI Umum & Roadshow Integrasi Admin': ['proyek/ppi umum 1.jpg', 'proyek/ppi umum 2.jpg', 'proyek/ppi umum 3.jpg', 'proyek/ppi umum 4.jpg', 'proyek/ppi umum 5.jpg']
+        };
+
+        const modal = document.getElementById('projectModal');
+        const modalGallery = document.getElementById('modalGallery');
+        const closeModal = document.querySelector('.close-modal');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        if (modal && modalGallery && closeModal) {
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const title = card.querySelector('h3').innerText;
+                    const images = projectData[title];
+                    modalGallery.innerHTML = '';
+                    if(images) {
+                        images.forEach(src => {
+                            const img = document.createElement('img');
+                            img.src = src;
+                            img.onerror = function() { this.src = 'https://via.placeholder.com/800x400/001c38/00d2ff?text=' + encodeURIComponent(title); };
+                            modalGallery.appendChild(img);
+                        });
+                    }
+                    modal.classList.add('active');
+                    modalGallery.scrollLeft = 0;
+                });
+            });
+
+            closeModal.addEventListener('click', () => modal.classList.remove('active'));
+            modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('active'); });
+
+            if(prevBtn && nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    modalGallery.scrollBy({ left: modalGallery.clientWidth, behavior: 'smooth' });
+                });
+                prevBtn.addEventListener('click', () => {
+                    modalGallery.scrollBy({ left: -modalGallery.clientWidth, behavior: 'smooth' });
+                });
+            }
+        }
+    </script>
+    
+    <!-- Modal HTML -->
+    <div id="projectModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="close-modal">&times;</div>
+            <button class="nav-btn prev-btn" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+            <div class="modal-gallery" id="modalGallery">
+            </div>
+            <button class="nav-btn next-btn" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+            <div style="text-align:center; color: #aaa; margin-top:10px; font-size: 0.9em; padding-bottom: 5px;"><i class="fas fa-arrows-alt-h"></i> Geser atau klik panah untuk melihat foto lain</div>
+        </div>
+    </div>
+</body>
+</html>
